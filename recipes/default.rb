@@ -53,8 +53,8 @@ directory node[:neti][:table_files_path] do
     recursive true
 end
 
-template "/etc/neti/neti.conf" do
-    source "neti.conf.erb"
+template "/etc/neti/neti.yml" do
+    source "neti.yml.erb"
     owner "root"
     group "root"
     mode 0644

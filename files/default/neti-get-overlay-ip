@@ -18,7 +18,7 @@ import time
 import urllib2
 import yaml
 
-CONFIG_FILE = "/etc/neti/neti.conf"
+CONFIG_FILE = "/etc/neti/neti.yml"
 
 
 def parse_config(path):
