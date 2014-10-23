@@ -1,0 +1,4 @@
+*nat
+-A PREROUTING -i eth0 -p tcp --dport <%= node.zookeeper.port %> -j DNAT --to-destination <%= @dest_ip %>:<%= node.zookeeper.port %>
+-A POSTROUTING -j MASQUERADE
+COMMIT

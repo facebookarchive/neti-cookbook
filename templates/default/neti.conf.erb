@@ -1,0 +1,66 @@
+##
+#  Copyright (c) 2014, Facebook, Inc.
+#  All rights reserved.
+#
+#  This source code is licensed under the BSD-style license found in the
+#  LICENSE file in the root directory of this source tree. An additional grant
+#  of patent rights can be found in the PATENTS file in the same directory.
+##
+
+
+[neti]
+
+# AWS keys for setting instance tags
+aws_key = <%= node.neti.aws_key %>
+aws_secret_key = <%= node.neti.aws_secret_key %>
+
+# path to Neti log file
+log_file = <%= node.neti.log_file %>
+
+# path to Neti table files
+table_files_path = <%= node.neti.table_files_path %>
+
+# comma separated list of open tcp ports
+open_ports = <%= node.neti.open_ports.join(",") %>
+
+# true/false for setting reject all at end of iptables
+reject_all = <%= node.neti.reject_all %>
+
+# comma separated list of whitelisted ssh addresses
+ssh_whitelist = <%= node.neti.ssh_whitelist.join(",") %>
+
+# prefix of zk paths
+zk_prefix = <%= node.neti.zk_prefix %>
+
+# Update interval path
+zk_update_interval_path = <%= node.neti.zk_update_interval_path %> 
+
+# Update interval path
+zk_max_change_threshold_path = <%= node.neti.zk_max_change_threshold_path %> 
+
+# Zookeeper path that maps virtual IP to Instance ID for locking IPs and used IP lookups
+zk_iptoid_node = <%= node.neti.zk_iptoid_node %>
+
+# Zookeeper path that maps Instance ID to virtual IP for persisting IP through disconnection
+zk_idtoip_node = <%= node.neti.zk_idtoip_node %>
+
+# Zookeeper path that holds ephemeral znodes containing the public, private, virtual IPs and VPC flag
+zk_ip_map_node = <%= node.neti.zk_ip_map_node %>
+
+# CIDR for usable IPs
+overlay_subnet = <%= node.neti.overlay_subnet %>
+
+[ec2]
+
+# Zookeeper hosts on the EC2 side
+zk_hosts = <%= node.neti.ec2.zk_hosts.join(",") %>
+
+[vpc]
+
+# Zookeeper hosts on the VPC side
+zk_hosts = <%= node.neti.vpc.zk_hosts.join(",") %>  
+
+[nat_overrides]
+<% node.neti.nat_overrides.each do |source, dest| -%>
+<%= source %>=<%= dest %>
+<% end -%>

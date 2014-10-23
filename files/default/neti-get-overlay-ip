@@ -1,0 +1,64 @@
+#!/usr/bin/env python
+
+##
+#  Copyright (c) 2014, Facebook, Inc.
+#  All rights reserved.
+#
+#  This source code is licensed under the BSD-style license found in the
+#  LICENSE file in the root directory of this source tree. An additional grant
+#  of patent rights can be found in the PATENTS file in the same directory.
+##
+
+
+import boto
+import os
+import re
+import sys
+import time
+import urllib2
+import yaml
+
+CONFIG_FILE = "/etc/neti/neti.conf"
+
+
+def parse_config(path):
+    if os.path.exists(path):
+        with open(path, "r") as f:
+            return yaml.load(f)
+    else:
+        print "Could not load config file at %s" % path
+        sys.exit(1)
+
+
+def main():
+    config = parse_config(CONFIG_FILE)
+
+    aws_key = config["aws_key"]
+    aws_secret_key = config["aws_secret_key"]
+
+    instance_id = urllib2.urlopen("http://169.254.169.254/latest/meta-data/instance-id").read()
+    availability_zone = urllib2.urlopen("http://169.254.169.254/latest/meta-data/placement/availability-zone").read()
+    region_name = re.findall("^(\w+-\w+-\d+)", availability_zone)[0]
+
+    while True:
+        try:
+            ec2_conn = boto.ec2.connect_to_region(
+                region_name,
+                aws_access_key_id=aws_key,
+                aws_secret_access_key=aws_secret_key)
+
+            tags = ec2_conn.get_all_tags({
+                "resource-type": "instance",
+                "resource-id": instance_id,
+                "key": "overlay_ip"})
+
+            if len(tags) > 0:
+                print tags[0].value
+                break
+        except Exception as e:
+            sys.stderr.write("Exception %s during read, retrying...\n" % e)
+            pass
+        time.sleep(10)
+
+if __name__ == "__main__":
+    main()
