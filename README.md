@@ -28,7 +28,7 @@ These attributes set up the Neti config file for you:
 * overlay_ip_cache_file_path: path for file cache of ips
 
 ## How Neti works
-See [Neti](https://github.com/Instagram/neti Neti)
+See [Neti](https://github.com/Instagram/neti)
 
 See the CONTRIBUTING file for how to help out.
 
